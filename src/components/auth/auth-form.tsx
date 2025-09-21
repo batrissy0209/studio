@@ -62,10 +62,22 @@ export function AuthForm({ mode }: AuthFormProps) {
     } catch (error) {
       const authError = error as AuthError;
       let errorMessage = "An unexpected error occurred. Please try again.";
-      if (authError.code === "auth/email-already-in-use") {
-        errorMessage = "This email is already in use.";
-      } else if (authError.code === "auth/user-not-found" || authError.code === "auth/wrong-password" || authError.code === "auth/invalid-credential") {
-        errorMessage = "Invalid email or password.";
+      
+      switch (authError.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "This email is already in use by another account.";
+          break;
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+        case "auth/invalid-credential":
+          errorMessage = "Invalid email or password.";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak. It should be at least 6 characters long.";
+          break;
+        case "auth/invalid-api-key":
+          errorMessage = "Invalid API key. Please check your Firebase configuration.";
+          break;
       }
       
       toast({
