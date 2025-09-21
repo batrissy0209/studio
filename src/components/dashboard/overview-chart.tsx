@@ -1,14 +1,27 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import type { Transaction } from "@/lib/types";
-import { ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface OverviewChartProps {
   data: Transaction[];
 }
+
+const chartConfig = {
+  income: {
+    label: "Income",
+    color: "hsl(var(--chart-2))",
+  },
+  expense: {
+    label: "Expense",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
+
 
 export function OverviewChart({ data }: OverviewChartProps) {
   const monthlyData = data.reduce((acc, transaction) => {
@@ -37,7 +50,7 @@ export function OverviewChart({ data }: OverviewChartProps) {
         <CardTitle>Overview</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
-        <ResponsiveContainer width="100%" height={350}>
+        <ChartContainer config={chartConfig} className="min-h-[350px] w-full">
           <BarChart data={chartData}>
             <XAxis
               dataKey="name"
@@ -53,14 +66,14 @@ export function OverviewChart({ data }: OverviewChartProps) {
               axisLine={false}
               tickFormatter={(value) => `$${value}`}
             />
-            <Tooltip
+            <ChartTooltip
               cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
               content={<ChartTooltipContent />} 
             />
-            <Bar dataKey="income" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} name="Income" />
-            <Bar dataKey="expense" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} name="Expense" />
+            <Bar dataKey="income" fill="var(--color-income)" radius={[4, 4, 0, 0]} name="Income" />
+            <Bar dataKey="expense" fill="var(--color-expense)" radius={[4, 4, 0, 0]} name="Expense" />
           </BarChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
   );

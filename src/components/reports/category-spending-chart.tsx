@@ -1,14 +1,22 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import type { Transaction } from "@/lib/types";
-import { ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { CATEGORY_MAP } from "@/lib/constants";
 
 interface CategorySpendingChartProps {
   transactions: Transaction[];
 }
+
+const chartConfig = {
+  total: {
+    label: "Spending",
+    color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
 
 export function CategorySpendingChart({ transactions }: CategorySpendingChartProps) {
   const expenseData = transactions
@@ -30,7 +38,7 @@ export function CategorySpendingChart({ transactions }: CategorySpendingChartPro
         <CardTitle>Spending by Category</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
+        <ChartContainer config={chartConfig} className="min-h-[400px] w-full">
           <BarChart data={chartData} layout="vertical">
             <XAxis type="number" hide />
             <YAxis
@@ -42,13 +50,13 @@ export function CategorySpendingChart({ transactions }: CategorySpendingChartPro
               axisLine={false}
               width={100}
             />
-            <Tooltip
+            <ChartTooltip
               cursor={{ fill: "hsl(var(--accent) / 0.2)" }}
               content={<ChartTooltipContent />}
             />
-            <Bar dataKey="total" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} name="Spending" />
+            <Bar dataKey="total" fill="var(--color-total)" radius={[0, 4, 4, 0]} name="Spending" />
           </BarChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
   );
