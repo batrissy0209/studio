@@ -78,6 +78,9 @@ export function AuthForm({ mode }: AuthFormProps) {
         case "auth/invalid-api-key":
           errorMessage = "Invalid API key. Please check your Firebase configuration.";
           break;
+        case "auth/operation-not-allowed":
+          errorMessage = "Email/password accounts are not enabled. Please enable it in your Firebase project's Authentication settings.";
+          break;
       }
       
       toast({
